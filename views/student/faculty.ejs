@@ -1,0 +1,60 @@
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-white">Faculty Directory</h1>
+      <p class="text-slate-400 text-sm">Browse department professors, cabin locations, and office hours.</p>
+    </div>
+    <a href="/student/dashboard" class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition">
+      &larr; Back to Dashboard
+    </a>
+  </div>
+
+  <!-- Faculty Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% if (faculties && faculties.length > 0) { %>
+      <% faculty.forEach(faculty => { %>
+        <div class="bg-[#181f33] border border-slate-800 rounded-2xl p-6 shadow-lg flex flex-col justify-between">
+          <div>
+            <div class="flex items-center space-x-4 mb-4">
+              <div class="w-12 h-12 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold text-lg">
+                <%= faculty.name ? faculty.name.charAt(0) : 'F' %>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-white"><%= faculty.name %></h3>
+                <span class="text-xs bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-full font-medium">
+                  <%= faculty.assignedDepartment || 'General Department' %>
+                </span>
+              </div>
+            </div>
+
+            <div class="space-y-2 text-sm text-slate-300 border-t border-slate-800/80 pt-4 mt-2">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Subject:</span>
+                <span class="font-medium text-white"><%= faculty.assignedSubject || 'N/A' %></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Cabin:</span>
+                <span class="font-medium text-white"><%= faculty.roomNumber || 'Not Assigned' %></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Free Slots:</span>
+                <span class="font-medium text-indigo-300 text-right"><%= faculty.freeSlots || 'By Appointment' %></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            <a href="mailto:<%= faculty.email %>" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-lg transition w-full text-center font-medium">
+              Send Email (<%= faculty.email %>)
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <div class="col-span-full text-center py-12 bg-[#181f33] rounded-2xl border border-slate-800">
+        <p class="text-slate-400">No faculty members found in the directory.</p>
+      </div>
+    <% } %>
+  </div>
+</div>

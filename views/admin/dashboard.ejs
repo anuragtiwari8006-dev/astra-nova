@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Campus Management</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
+
+  <!-- Top Navigation Bar -->
+  <header class="bg-slate-900 border-b border-slate-800 px-8 py-4 flex justify-between items-center shadow-md">
+    <div class="flex items-center space-x-3">
+      <div class="bg-indigo-600 text-white p-2 rounded-xl font-bold">CM</div>
+      <h1 class="text-xl font-bold tracking-wide">Campus Admin Portal</h1>
+    </div>
+    <div class="flex items-center space-x-4">
+      <span class="text-sm text-slate-400">Welcome, <strong class="text-slate-200"><%= user ? user.name : 'Admin' %></strong></span>
+      <a href="/auth/logout" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-lg">Logout</a>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Container -->
+  <main class="max-w-7xl mx-auto px-6 py-8">
+
+    <!-- Notification Alert Message -->
+    <% if (message) { %>
+      <div class="bg-indigo-600 text-white px-6 py-4 rounded-2xl mb-8 shadow-xl flex justify-between items-center border border-indigo-500">
+        <span class="font-medium"><%= message %></span>
+        <a href="/admin/dashboard" class="text-indigo-200 hover:text-white font-bold text-lg">&times;</a>
+      </div>
+    <% } %>
+
+    <!-- Top Quick Action & Stats Row -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      
+      <!-- Total Students Card -->
+      <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl flex items-center justify-between">
+        <div>
+          <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Total Students</p>
+          <h2 class="text-3xl font-extrabold text-white mt-1"><%= totalStudents %></h2>
+        </div>
+        <div class="bg-indigo-500/10 text-indigo-400 p-4 rounded-xl">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+        </div>
+      </div>
+
+      <!-- Total Faculty Card -->
+      <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl flex items-center justify-between">
+        <div>
+          <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Total Faculty</p>
+          <h2 class="text-3xl font-extrabold text-white mt-1"><%= totalFaculties %></h2>
+        </div>
+        <div class="bg-emerald-500/10 text-emerald-400 p-4 rounded-xl">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+        </div>
+      </div>
+
+      <!-- Quick Action Seed Button Card -->
+      <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
+        <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">System Controls</p>
+        <form action="/admin/seed-data" method="POST">
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-xl transition shadow-lg text-center cursor-pointer">
+            ⚡ Seed Mock Data (100 Students)
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- Bulk Upload Form Section -->
+    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl mb-8">
+      <h3 class="text-lg font-bold text-slate-200 mb-4">Import Students via Excel or CSV</h3>
+      <form action="/admin/import-excel" method="POST" enctype="multipart/form-data" class="flex flex-col sm:flex-row items-center gap-4">
+        <input type="file" name="file" accept=".csv, .xlsx, .xls" required 
+          class="w-full sm:w-auto file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 text-slate-400 bg-slate-950 border border-slate-800 rounded-xl cursor-pointer p-2 flex-1" />
+        <button type="submit" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-xl transition shadow-lg cursor-pointer">
+          Upload & Process File
+        </button>
+      </form>
+    </div>
+
+    <!-- Analytics Charts Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      
+      <!-- Fee Breakdown Chart Card -->
+      <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+        <h3 class="text-sm font-semibold text-slate-400 mb-6 uppercase tracking-wider">Fee Payment Status Breakdown</h3>
+        <div class="relative h-72">
+          <canvas id="feeChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Department Distribution Chart Card -->
+      <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+        <h3 class="text-sm font-semibold text-slate-400 mb-6 uppercase tracking-wider">Department Student Distribution</h3>
+        <div class="relative h-72">
+          <canvas id="deptChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Students Table Section -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+      <div class="p-6 border-b border-slate-800">
+        <h3 class="text-lg font-bold text-slate-200">Enrolled Students List</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-950/50 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
+              <th class="py-4 px-6">Name</th>
+              <th class="py-4 px-6">Email</th>
+              <th class="py-4 px-6">Roll Number</th>
+              <th class="py-4 px-6">Department</th>
+              <th class="py-4 px-6">Semester</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800 text-sm text-slate-300">
+            <% if (students && students.length > 0) { %>
+              <% students.forEach(student => { %>
+                <tr class="hover:bg-slate-800/50 transition">
+                  <td class="py-4 px-6 font-medium text-white"><%= student.userId ? student.userId.name : 'N/A' %></td>
+                  <td class="py-4 px-6 text-slate-400"><%= student.userId ? student.userId.email : 'N/A' %></td>
+                  <td class="py-4 px-6 font-mono text-indigo-400"><%= student.rollNumber %></td>
+                  <td class="py-4 px-6"><%= student.department %></td>
+                  <td class="py-4 px-6">Sem <%= student.semester %></td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="5" class="py-8 text-center text-slate-500">No student records found. Seed data or upload a spreadsheet above.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Analytics Rendering Script -->
+  <script>
+    try {
+      const feeDataValues = <%- JSON.stringify(feeStats) %>;
+      const deptDataValues = <%- JSON.stringify(deptStats) %>;
+
+      // 1. Fee Payment Doughnut Chart
+      const feeCtx = document.getElementById('feeChart').getContext('2d');
+      new Chart(feeCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Total Paid', 'Remaining Dues'],
+          datasets: [{
+            data: feeDataValues,
+            backgroundColor: ['#10B981', '#F59E0B'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#94A3B8', font: { family: 'sans-serif' } } }
+          }
+        }
+      });
+
+      // 2. Department Bar Chart
+      const deptCtx = document.getElementById('deptChart').getContext('2d');
+      new Chart(deptCtx, {
+        type: 'bar',
+        data: {
+          labels: deptDataValues.labels,
+          datasets: [{
+            label: 'Students Count',
+            data: deptDataValues.data,
+            backgroundColor: '#6366F1',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: { ticks: { color: '#94A3B8' }, grid: { display: false } },
+            y: { ticks: { color: '#94A3B8', stepSize: 1 }, grid: { color: '#1E293B' } }
+          }
+        }
+      });
+    } catch (e) {
+      console.error('Error rendering dashboard charts:', e);
+    }
+  </script>
+
+</body>
+</html>

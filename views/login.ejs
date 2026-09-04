@@ -1,0 +1,33 @@
+<div class="max-w-md mx-auto mt-16 bg-white p-8 rounded-xl shadow-md border border-slate-200">
+  <div class="text-center mb-6">
+    <h2 class="text-2xl font-bold text-slate-900">Sign In to Campus ERP</h2>
+    <p class="text-slate-500 text-sm mt-1">Access Admin, Faculty, or Student Portals</p>
+  </div>
+
+  <% if (error) { %>
+    <div class="mb-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-lg">
+      <%= error %>
+    </div>
+  <% } %>
+
+  <form action="/auth/login" method="POST" class="space-y-4">
+    <div>
+      <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Email Address</label>
+      <input type="email" name="email" required placeholder="admin@campus.edu" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Password</label>
+      <input type="password" name="password" required placeholder="••••••••" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+    </div>
+
+    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition">
+      Log In
+    </button>
+  </form>
+
+  <div class="mt-6 border-t pt-4 text-xs text-slate-500 space-y-1">
+    <p><strong>Demo Credentials:</strong></p>
+    <p>Admin: <code class="bg-slate-100 px-1 py-0.5 rounded">admin@campus.edu</code> / <code class="bg-slate-100 px-1 py-0.5 rounded">admin123</code></p>
+  </div>
+</div>
