@@ -1,4 +1,3 @@
-
 const { faker } = require('@faker-js/faker');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
@@ -7,15 +6,40 @@ const Result = require('../models/Result');
 
 async function seedDatabase() {
   try {
-    // Clear existing mock student data
+    // 1. Seed / Upsert Core System Accounts First (Admin & Faculty)
+    const hashedPassword = await bcrypt.hash('student123', 10);
+    const adminPassword = await bcrypt.hash('admin123', 10);
+    const facultyPassword = await bcrypt.hash('faculty123', 10);
+
+    // Upsert Admin
+    await User.findOneAndUpdate(
+      { email: 'admin@campus.edu' },
+      { name: 'System Admin', password: adminPassword, role: 'admin' },
+      { upsert: true, new: true }
+    );
+
+    // Upsert Faculty 1 (Matches your Computer Science Sem 4 requirements)
+    await User.findOneAndUpdate(
+      { email: 'faculty1@campus.edu' },
+      { 
+        name: 'Dr. Ramesh Sharma', 
+        password: facultyPassword, 
+        role: 'faculty',
+        assignedDepartment: 'Computer Science',
+        assignedSemester: 4,
+        assignedSubject: 'Data Structures'
+      },
+      { upsert: true, new: true }
+    );
+
+    // 2. Clear existing mock student data safely
     await User.deleteMany({ role: 'student' });
     await Student.deleteMany({});
     await Result.deleteMany({});
 
-    const hashedPassword = await bcrypt.hash('student123', 10);
     const departments = ['Computer Science', 'Information Technology', 'Electronics', 'Mechanical'];
 
-    // 1. Fixed Test Student
+    // 3. Fixed Test Student
     const testUser = await User.create({
       name: 'Test Student',
       email: 'student@campus.edu',
@@ -41,7 +65,7 @@ async function seedDatabase() {
       gpa: 8.8
     });
 
-    // 2. Generate 29 students (Assign first 12 to CS Sem 4)
+    // 4. Generate 29 students (Assign first 12 to CS Sem 4)
     for (let i = 1; i < 30; i++) {
       const name = faker.person.fullName();
       const email = faker.internet.email().toLowerCase();
@@ -53,7 +77,6 @@ async function seedDatabase() {
         role: 'student'
       });
 
-      // Force first 12 students into Computer Science, Semester 4 for Faculty testing
       const department = i <= 12 ? 'Computer Science' : faker.helpers.arrayElement(departments);
       const semester = i <= 12 ? 4 : faker.number.int({ min: 1, max: 8 });
 
@@ -80,10 +103,11 @@ async function seedDatabase() {
       });
     }
 
-    console.log('Database seeded with fixed batch for Computer Science Sem 4!');
+    console.log('Database seeded completely with Admin, Faculty, and Student batch!');
   } catch (err) {
     console.error('Seeding Error:', err);
   }
 }
 
 module.exports = seedDatabase;
+
