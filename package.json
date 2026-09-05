@@ -1,4 +1,7 @@
 {
+  "engines":{
+    "node":"v24.14.0"
+  },
   "name": "origin",
   "version": "1.0.0",
   "description": "",

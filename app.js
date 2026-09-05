@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const expressLayouts = require('express-ejs-layouts');
 const bcrypt = require('bcryptjs');
@@ -27,12 +28,32 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
 app.set('layout', 'layout');
+const store=MongoStore.create({
+  mongoUrl: dbUrl,
+  crypto:{
+    secret:process.env.SESSION_SECRET
+  },touchafter: 24 * 3600,
+});
+const sessionOptions ={
+  store,
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie:{
+    expires:Date.now() +7*24*60*60*1000,
+    maxAge: 7*24*60*60*1000,
+    httpOnly: true,
+  }
+};
+
 
 // Global User Payload Middleware
 app.use((req, res, next) => {
   res.locals.user = (req.session && req.session.user) || req.user || null;
   next();
 });
+
+
 
 // Import Route Handlers
 const authRoutes = require('./routes/auth');
@@ -72,10 +93,11 @@ async function initializeAdminAccount() {
 
 // Database Connection & Server Initialization
 const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/student_erp';
+
+const dbUrl=process.env.ATLASDB_URI
 
 mongoose
-  .connect(MONGO_URI)
+  .connect(dbUrl)
   .then(async () => {
     console.log('MongoDB Connected Successfully');
     await initializeAdminAccount();
