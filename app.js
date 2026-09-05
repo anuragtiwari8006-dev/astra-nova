@@ -92,17 +92,20 @@ async function initializeAdminAccount() {
 }
 
 // Database Connection & Server Initialization
+
 const PORT = process.env.PORT || 3000;
 
+// Define dbUrl correctly using your environment variable
+const dbUrl = process.env.ATLASDB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/student_erp';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/student_erp';
+// Now line 32 (mongoose connect using dbUrl) will work properly
 mongoose
   .connect(dbUrl)
   .then(async () => {
     console.log('MongoDB Connected Successfully');
     await initializeAdminAccount();
     app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
