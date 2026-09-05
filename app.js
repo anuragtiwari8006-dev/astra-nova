@@ -39,7 +39,7 @@ app.use(expressLayouts);
 app.set('layout', 'layout');
 
 // Import the Seeder Function (adjust path if your folder is named 'utils' instead of 'utilis')
-const seedDatabase = require('./utils/seeder.js');
+const seedDatabase = require('./utils/seeder');
 
 // Global User Payload Middleware
 app.use((req, res, next) => {
