@@ -94,8 +94,8 @@ async function initializeAdminAccount() {
 // Database Connection & Server Initialization
 const PORT = process.env.PORT || 3000;
 
-const dbUrl=process.env.ATLASDB_URI
 
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/student_erp';
 mongoose
   .connect(dbUrl)
   .then(async () => {
