@@ -28,14 +28,10 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
 app.set('layout', 'layout');
-const store=MongoStore.create({
-  mongoUrl: dbUrl,
-  crypto:{
-    secret:process.env.SESSION_SECRET
-  },touchafter: 24 * 3600,
-});
+
+
 const sessionOptions ={
-  store,
+  
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
