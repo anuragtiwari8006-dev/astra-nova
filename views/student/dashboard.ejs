@@ -1,113 +1,1384 @@
 
-<div class="min-h-screen bg-[#0b0f19] text-slate-100 p-6 rounded-2xl space-y-6">
-  
-  <!-- Banner Section -->
-  <div class="bg-[#161c2e] p-8 rounded-2xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-    <div>
-      <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">Academic Session 2026</span>
-      <h1 class="text-3xl font-extrabold text-white mt-2">College Academic Dashboard</h1>
-      <p class="text-slate-400 text-sm mt-1">Track GPA, attendance status, tuition fees, course registrations, and library reservations in real-time.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Student Dashboard | ERP</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top right, rgba(79,70,229,0.14), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(37,99,235,0.10), transparent 28%),
+        #060b14;
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    .glass {
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .sidebar {
+      background:
+        linear-gradient(
+          180deg,
+          rgba(7, 18, 35, 0.98),
+          rgba(5, 15, 29, 0.98)
+        );
+    }
+
+    .hero-card {
+      background:
+        radial-gradient(
+          circle at 85% 50%,
+          rgba(79,70,229,0.18),
+          transparent 32%
+        ),
+        linear-gradient(
+          135deg,
+          #111a35,
+          #0b1328 55%,
+          #101a3d
+        );
+    }
+
+    .nav-item {
+      transition: all 0.25s ease;
+    }
+
+    .nav-item:hover {
+      transform: translateX(4px);
+      background: rgba(99,102,241,0.13);
+      color: white;
+    }
+
+    .nav-active {
+      background:
+        linear-gradient(
+          90deg,
+          rgba(79,70,229,0.45),
+          rgba(67,56,202,0.24)
+        );
+
+      box-shadow:
+        inset 0 0 0 1px rgba(129,140,248,0.15),
+        0 10px 30px rgba(79,70,229,0.12);
+    }
+
+    .metric-card {
+      transition: all 0.25s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    }
+
+    .notice-row,
+    .result-row,
+    .attendance-row {
+      transition: all 0.25s ease;
+    }
+
+    .notice-row:hover,
+    .result-row:hover,
+    .attendance-row:hover {
+      background: rgba(30,41,59,0.85);
+    }
+
+    .hero-illustration {
+      position: relative;
+      width: 210px;
+      height: 170px;
+    }
+
+    .book {
+      position: absolute;
+      left: 20px;
+      bottom: 20px;
+      width: 120px;
+      height: 25px;
+      border-radius: 5px;
+      transform: skewY(-8deg);
+      box-shadow: 0 10px 30px rgba(79,70,229,0.25);
+    }
+
+    .book.one {
+      bottom: 42px;
+      background: linear-gradient(90deg, #4338ca, #6366f1);
+    }
+
+    .book.two {
+      bottom: 18px;
+      width: 145px;
+      background: linear-gradient(90deg, #1d4ed8, #2563eb);
+    }
+
+    .screen {
+      position: absolute;
+      right: 2px;
+      top: 15px;
+      width: 100px;
+      height: 90px;
+      border: 2px solid rgba(96,165,250,0.8);
+      border-radius: 9px;
+      transform: perspective(400px) rotateY(-15deg);
+      background: linear-gradient(
+        145deg,
+        rgba(30,64,175,0.35),
+        rgba(15,23,42,0.8)
+      );
+      box-shadow:
+        0 0 25px rgba(37,99,235,0.25),
+        inset 0 0 25px rgba(59,130,246,0.1);
+    }
+
+    .screen-line {
+      height: 4px;
+      border-radius: 5px;
+      background: rgba(96,165,250,0.75);
+      margin: 12px 12px 0;
+    }
+
+    .cap {
+      position: absolute;
+      left: 45px;
+      top: 22px;
+      width: 65px;
+      height: 15px;
+      background: linear-gradient(90deg,#4f46e5,#818cf8);
+      transform: rotate(-12deg) skewX(-20deg);
+      border-radius: 3px;
+      box-shadow: 0 0 25px rgba(99,102,241,0.45);
+    }
+
+    .cap-base {
+      position: absolute;
+      left: 65px;
+      top: 35px;
+      width: 38px;
+      height: 22px;
+      background: #4338ca;
+      transform: skewY(-5deg);
+      border-radius: 3px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-illustration {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+
+<body class="text-slate-100">
+
+<div class="min-h-screen flex">
+
+
+  <!-- =====================================================
+       SIDEBAR
+       ===================================================== -->
+
+  <aside
+    class="sidebar hidden lg:flex w-[260px] min-h-screen fixed left-0 top-0 flex-col border-r border-slate-800/80 z-50"
+  >
+
+    <!-- Logo -->
+
+    <div class="px-6 py-6 flex items-center gap-3">
+
+      <div
+        class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shadow-lg shadow-indigo-600/30"
+      >
+        <span class="text-2xl">🎓</span>
+      </div>
+
+      <div>
+
+        <h2 class="font-extrabold text-lg text-white">
+          Student ERP
+        </h2>
+
+        <p class="text-xs text-slate-500">
+          Academic Portal
+        </p>
+
+      </div>
+
     </div>
 
-    <div class="flex items-center gap-3">
-      <a href="/student/download-report" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm px-4 py-2.5 rounded-xl transition shadow-lg shadow-indigo-600/30 flex items-center gap-2">
-        📄 Download PDF Marksheet
+
+    <!-- Navigation -->
+
+    <nav class="px-4 space-y-2 flex-1">
+
+      <a
+        href="/student/dashboard"
+        class="nav-item nav-active flex items-center gap-4 px-4 py-3 rounded-xl text-sm font-semibold text-white"
+      >
+        <span class="text-lg">⌂</span>
+        <span>Dashboard</span>
       </a>
-      <a href="/student/faculties" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center gap-2">
-        🔍 Faculty Directory & Slots
+
+
+      <a
+        href="#"
+        class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-sm text-slate-300"
+      >
+        <span class="text-lg">👤</span>
+        <span>My Profile</span>
       </a>
-    </div>
-  </div>
 
-  <!-- Key Academic Metrics Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-    
-    <!-- CGPA Card -->
-    <div class="bg-[#121725] p-5 rounded-2xl border border-slate-800/80">
-      <div class="flex justify-between items-center text-slate-400 text-xs font-semibold uppercase">
-        <span>Cumulative GPA</span>
-        <span class="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg">🎓</span>
-      </div>
-      <div class="mt-3">
-        <span class="text-3xl font-extrabold text-white"><%= cgpa %></span>
-        <span class="text-slate-500 text-sm"> / 10.0</span>
-      </div>
-      <p class="text-xs text-slate-400 mt-2">Current Semester: <%= student.semester %></p>
-    </div>
 
-    <!-- Attendance Card -->
-    <div class="bg-[#121725] p-5 rounded-2xl border border-slate-800/80">
-      <div class="flex justify-between items-center text-slate-400 text-xs font-semibold uppercase">
-        <span>Total Attendance</span>
-        <span class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg">📊</span>
-      </div>
-      <div class="mt-3">
-        <span class="text-3xl font-extrabold text-white"><%= attendancePercentage %>%</span>
-      </div>
-      <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden">
-        <div class="bg-emerald-500 h-full rounded-full" style="width: <%= attendancePercentage %>%"></div>
-      </div>
-    </div>
+      <a
+        href="#attendance"
+        class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-sm text-slate-300"
+      >
+        <span class="text-lg">📅</span>
+        <span>Attendance</span>
+      </a>
 
-    <!-- Fee Ledger Card -->
-    <div class="bg-[#121725] p-5 rounded-2xl border border-slate-800/80">
-      <div class="flex justify-between items-center text-slate-400 text-xs font-semibold uppercase">
-        <span>Fee Status</span>
-        <span class="p-2 bg-amber-500/10 text-amber-400 rounded-lg">💳</span>
-      </div>
-      <div class="mt-3">
-        <% if (remainingFee > 0) { %>
-          <span class="text-3xl font-extrabold text-amber-400">₹<%= remainingFee.toLocaleString() %></span>
-          <span class="text-xs text-rose-400 font-semibold block mt-1">DUE REMAINING</span>
-        <% } else { %>
-          <span class="text-2xl font-extrabold text-emerald-400">NO DUES</span>
-          <span class="text-xs text-emerald-500 font-semibold block mt-1">Full Paid</span>
-        <% } %>
-      </div>
-    </div>
 
-    <!-- Credits Earned Card -->
-    <div class="bg-[#121725] p-5 rounded-2xl border border-slate-800/80">
-      <div class="flex justify-between items-center text-slate-400 text-xs font-semibold uppercase">
-        <span>Credits Earned</span>
-        <span class="p-2 bg-blue-500/10 text-blue-400 rounded-lg">⏱️</span>
-      </div>
-      <div class="mt-3">
-        <span class="text-3xl font-extrabold text-white"><%= creditsEarned %></span>
-        <span class="text-slate-500 text-sm"> / 160</span>
-      </div>
-      <p class="text-xs text-slate-400 mt-2">Degree Requirement Progress</p>
-    </div>
-  </div>
+      <a
+        href="#results"
+        class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-sm text-slate-300"
+      >
+        <span class="text-lg">◉</span>
+        <span>Results</span>
+      </a>
 
-  <!-- Alert Banner for Dues -->
-  <% if (remainingFee > 0) { %>
-    <div class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-xl flex justify-between items-center text-amber-200 text-sm">
-      <div class="flex items-center gap-3">
-        <span>⚠️</span>
-        <p><strong>Fee Reminder:</strong> Semester tuition fee of ₹<%= remainingFee.toLocaleString() %> is pending. Clear dues to avoid exam hall ticket hold.</p>
-      </div>
-    </div>
-  <% } %>
 
-  <!-- Academic Notices & Upcoming Exam Schedule -->
-  <div class="bg-[#121725] p-6 rounded-2xl border border-slate-800/80 space-y-4">
-    <h3 class="text-lg font-bold text-white flex items-center gap-2">
-      🔔 Academic Notices & Upcoming Exam Schedule
-    </h3>
-    <div class="space-y-3">
-      <% notices.forEach(n => { %>
-        <div class="bg-[#181f33] p-4 rounded-xl border border-slate-800 flex justify-between items-start">
+      <!-- COURSE REGISTRATION REMOVED -->
+
+
+      <a
+        href="#"
+        class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-sm text-slate-300"
+      >
+        <span class="text-lg">💳</span>
+        <span>Fee Ledger</span>
+      </a>
+
+
+      <!-- LIBRARY REMOVED -->
+
+
+      <a
+        href="#notices"
+        class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-sm text-slate-300"
+      >
+        <span class="text-lg">🔔</span>
+        <span>Notices</span>
+      </a>
+
+
+      <a
+        href="/student/faculties"
+        class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-sm text-slate-300"
+      >
+        <span class="text-lg">👥</span>
+        <span>Faculties & Slots</span>
+      </a>
+
+
+      <a
+        href="/student/download-report"
+        class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-sm text-slate-300"
+      >
+        <span class="text-lg">⬇</span>
+        <span>Download Report</span>
+      </a>
+
+
+      <a
+        href="#"
+        class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-sm text-slate-300"
+      >
+        <span class="text-lg">⚙</span>
+        <span>Settings</span>
+      </a>
+
+    </nav>
+
+
+    <!-- Logout -->
+
+    <div class="px-4 pb-4">
+
+      <div class="border-t border-slate-800 pt-3">
+
+        <a
+          href="/logout"
+          class="nav-item flex items-center gap-4 px-4 py-3 rounded-xl text-sm text-red-400 hover:text-red-300"
+        >
+          <span class="text-lg">↪</span>
+          <span>Logout</span>
+        </a>
+
+      </div>
+
+
+      <div
+        class="mt-4 p-4 rounded-xl border border-indigo-500/20 bg-indigo-500/10"
+      >
+
+        <div class="flex items-center gap-3">
+
+          <div class="text-3xl">
+            📚
+          </div>
+
           <div>
-            <h4 class="font-bold text-white text-base"><%= n.title %></h4>
-            <p class="text-slate-400 text-xs mt-1"><%= n.content %></p>
+
+            <h4 class="text-sm font-bold text-white">
+              Stay Updated!
+            </h4>
+
+            <p class="text-[10px] leading-4 text-slate-400 mt-1">
+              Check notices regularly and keep track of your academic progress.
+            </p>
+
           </div>
-          <div class="text-right text-xs text-slate-500 whitespace-nowrap ml-4">
-            <span class="block font-semibold text-indigo-400"><%= n.department %></span>
-            <span><%= n.date %></span>
-          </div>
+
         </div>
-      <% }) %>
+
+      </div>
+
     </div>
-  </div>
+
+  </aside>
+
+
+
+  <!-- =====================================================
+       MAIN
+       ===================================================== -->
+
+  <main
+    class="flex-1 lg:ml-[260px] min-h-screen p-4 md:p-6 lg:p-8"
+  >
+
+
+    <!-- MOBILE HEADER -->
+
+    <div class="lg:hidden mb-5">
+
+      <div
+        class="glass border border-slate-800 rounded-2xl p-4 flex justify-between items-center"
+      >
+
+        <div class="flex items-center gap-3">
+
+          <div
+            class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center"
+          >
+            🎓
+          </div>
+
+          <div>
+
+            <h2 class="font-bold">
+              Student ERP
+            </h2>
+
+            <p class="text-xs text-slate-500">
+              Academic Portal
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         WELCOME
+         ===================================================== -->
+
+    <div class="flex justify-between items-center mb-6">
+
+      <div>
+
+        <h1 class="text-2xl md:text-3xl font-extrabold text-white">
+
+         <span class="text-slate-900">Welcome back,</span>
+          
+<span class="text-slate-900">
+  <%= user?.name || student?.userId?.name || 'Student' %>
+</span>!
+
+        </h1>
+
+
+        <p class="text-slate-400 mt-1 text-sm md:text-base">
+          Here's your academic overview for the current semester.
+        </p>
+
+      </div>
+
+
+      <div
+        class="hidden sm:flex items-center gap-3 px-3 py-2 rounded-xl border border-slate-800 bg-slate-900/60"
+      >
+
+        <div
+          class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center font-bold"
+        >
+          <%= (user?.name || 'S').charAt(0).toUpperCase() %>
+        </div>
+
+        <div class="hidden md:block">
+
+          <p class="text-sm font-bold text-white">
+            <%= user?.name || 'Student' %>
+          </p>
+
+          <p class="text-xs text-slate-500">
+            Student
+          </p>
+
+        </div>
+
+        <span class="text-slate-500">
+          ⌄
+        </span>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <section
+      class="hero-card relative overflow-hidden rounded-2xl border border-indigo-500/20 p-6 md:p-8 mb-6"
+    >
+
+      <div class="relative z-10 flex flex-col lg:flex-row justify-between gap-8">
+
+        <div class="max-w-2xl">
+
+          <span
+            class="inline-flex items-center gap-2 text-xs font-bold text-indigo-300 uppercase tracking-widest bg-indigo-500/10 px-3 py-1.5 rounded-full border border-indigo-500/20"
+          >
+            ✦ Academic Session 2026
+          </span>
+
+
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-4">
+            College Academic Dashboard
+          </h2>
+
+
+          <p class="text-slate-400 text-sm md:text-base mt-3 leading-6">
+            Track GPA, attendance status, tuition fees, academic results,
+            faculty slots and important notices in real-time.
+          </p>
+
+
+          <div class="flex flex-wrap gap-3 mt-6">
+
+            <a
+              href="/student/download-report"
+              class="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold text-sm px-5 py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/25"
+            >
+              📄 Download PDF Marksheet
+            </a>
+
+
+            <a
+              href="/student/faculties"
+              class="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm px-5 py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20"
+            >
+              👥 Faculty Directory & Slots
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <!-- Illustration -->
+
+        <div class="hero-illustration hidden md:block mr-4">
+
+          <div class="cap"></div>
+
+          <div class="cap-base"></div>
+
+          <div class="book one"></div>
+
+          <div class="book two"></div>
+
+          <div class="screen">
+
+            <div class="screen-line"></div>
+
+            <div
+              class="screen-line"
+              style="width:55%;"
+            ></div>
+
+            <div
+              class="mt-5 mx-3 h-7 rounded-md bg-blue-500/20 border border-blue-400/30"
+            ></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         METRICS
+         ===================================================== -->
+
+    <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+
+
+      <!-- CGPA -->
+
+      <div
+        class="metric-card bg-[#0d1627] p-5 rounded-2xl border border-indigo-500/25"
+      >
+
+        <div class="flex justify-between items-center">
+
+          <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Cumulative GPA
+          </span>
+
+          <span class="p-2.5 bg-indigo-500/10 text-indigo-400 rounded-xl">
+            🎓
+          </span>
+
+        </div>
+
+
+        <div class="mt-4">
+
+          <span class="text-4xl font-extrabold text-white">
+            <%= cgpa %>
+          </span>
+
+          <span class="text-slate-500 text-sm">
+            / 10.0
+          </span>
+
+        </div>
+
+
+        <p class="text-xs text-slate-500 mt-3">
+          Current Semester:
+          <span class="text-slate-300">
+            <%= student?.semester || 'N/A' %>
+          </span>
+        </p>
+
+      </div>
+
+
+
+      <!-- ATTENDANCE -->
+
+      <div
+        class="metric-card bg-[#0d1822] p-5 rounded-2xl border border-emerald-500/25"
+      >
+
+        <div class="flex justify-between items-center">
+
+          <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Total Attendance
+          </span>
+
+          <span class="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl">
+            📊
+          </span>
+
+        </div>
+
+
+        <div class="mt-4">
+
+          <span class="text-4xl font-extrabold text-white">
+            <%= attendancePercentage %>
+          </span>
+
+          <span class="text-lg text-slate-400">
+            %
+          </span>
+
+        </div>
+
+
+        <div class="w-full bg-slate-800 h-2 rounded-full mt-4 overflow-hidden">
+
+          <div
+            class="bg-gradient-to-r from-emerald-500 to-green-400 h-full rounded-full"
+            style="width: <%= Math.min(attendancePercentage, 100) %>%"
+          ></div>
+
+        </div>
+
+
+        <p class="text-xs text-emerald-400 mt-2">
+
+          <%= attendancePercentage >= 75
+            ? 'Good Attendance'
+            : 'Attendance Needs Attention'
+          %>
+
+        </p>
+
+      </div>
+
+
+
+      <!-- FEES -->
+
+      <div
+        class="metric-card bg-[#19160f] p-5 rounded-2xl border border-amber-500/30"
+      >
+
+        <div class="flex justify-between items-center">
+
+          <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Fee Status
+          </span>
+
+          <span class="p-2.5 bg-amber-500/10 text-amber-400 rounded-xl">
+            💳
+          </span>
+
+        </div>
+
+
+        <div class="mt-4">
+
+          <% if (remainingFee > 0) { %>
+
+            <span class="text-3xl font-extrabold text-amber-400">
+              ₹<%= remainingFee.toLocaleString() %>
+            </span>
+
+            <span class="text-xs text-rose-400 font-semibold block mt-2">
+              DUE REMAINING
+            </span>
+
+          <% } else { %>
+
+            <span class="text-2xl font-extrabold text-emerald-400">
+              NO DUES
+            </span>
+
+            <span class="text-xs text-emerald-500 font-semibold block mt-2">
+              FULLY PAID
+            </span>
+
+          <% } %>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- CREDITS -->
+
+      <div
+        class="metric-card bg-[#0c1727] p-5 rounded-2xl border border-blue-500/30"
+      >
+
+        <div class="flex justify-between items-center">
+
+          <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Credits Earned
+          </span>
+
+          <span class="p-2.5 bg-blue-500/10 text-blue-400 rounded-xl">
+            ⏱️
+          </span>
+
+        </div>
+
+
+        <div class="mt-4">
+
+          <span class="text-4xl font-extrabold text-white">
+            <%= creditsEarned %>
+          </span>
+
+          <span class="text-slate-500 text-sm">
+            / 160
+          </span>
+
+        </div>
+
+
+        <p class="text-xs text-slate-500 mt-3">
+          Degree Requirement Progress
+        </p>
+
+
+        <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3">
+
+          <div
+            class="bg-blue-500 h-full rounded-full"
+            style="width: <%= Math.min((creditsEarned / 160) * 100, 100) %>%"
+          ></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FEE ALERT
+         ===================================================== -->
+
+    <% if (remainingFee > 0) { %>
+
+      <div
+        class="mb-6 bg-amber-500/10 border border-amber-500/30 p-4 rounded-xl flex flex-col md:flex-row md:justify-between md:items-center gap-4"
+      >
+
+        <div class="flex items-start gap-3">
+
+          <span class="text-xl">
+            ⚠️
+          </span>
+
+          <div>
+
+            <p class="text-sm text-amber-200">
+
+              <strong class="text-amber-400">
+                Fee Reminder:
+              </strong>
+
+              Semester tuition fee of
+              <strong>
+                ₹<%= remainingFee.toLocaleString() %>
+              </strong>
+              is pending.
+
+            </p>
+
+            <p class="text-xs text-amber-300/60 mt-1">
+              Clear dues to avoid exam hall ticket hold.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-300 px-5 py-2.5 rounded-xl text-sm font-semibold transition"
+        >
+          Pay Now
+        </button>
+
+      </div>
+
+    <% } %>
+
+
+
+    <!-- =====================================================
+         SEMESTER-WISE RESULTS
+         ===================================================== -->
+
+    <section
+      id="results"
+      class="bg-[#0b1525] rounded-2xl border border-slate-800/80 overflow-hidden mb-6"
+    >
+
+      <div
+        class="p-5 md:p-6 border-b border-slate-800"
+      >
+
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
+
+          <div>
+
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              🎓 Semester-wise Academic Results
+            </h3>
+
+            <p class="text-xs text-slate-500 mt-1">
+              View your grades, marks and GPA for every semester completed so far.
+            </p>
+
+          </div>
+
+          <span
+            class="text-xs text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 px-3 py-2 rounded-lg"
+          >
+            <%= results?.length || 0 %> Semester Records
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="p-4 space-y-4">
+
+        <% if (semesterResults && semesterResults.length > 0) { %>
+
+          <% semesterResults.forEach((semesterResult) => { %>
+
+            <div
+              class="result-row rounded-2xl border border-slate-800 bg-slate-900/30 overflow-hidden"
+            >
+
+              <!-- Semester Header -->
+
+              <div
+                class="p-4 flex flex-col md:flex-row md:justify-between md:items-center gap-3 border-b border-slate-800"
+              >
+
+                <div class="flex items-center gap-3">
+
+                  <div
+                    class="w-11 h-11 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold"
+                  >
+                    <%= semesterResult.semester %>
+                  </div>
+
+                  <div>
+
+                    <h4 class="font-bold text-white">
+                      Semester <%= semesterResult.semester %>
+                    </h4>
+
+                    <p class="text-xs text-slate-500">
+                      <%= semesterResult.subjects.length %> Subjects
+                    </p>
+
+                  </div>
+
+                </div>
+
+
+                <div class="flex items-center gap-3">
+
+                  <div class="text-right">
+
+                    <p class="text-[10px] uppercase text-slate-500">
+                      Semester GPA
+                    </p>
+
+                    <p class="text-xl font-extrabold text-indigo-400">
+                      <%= Number(semesterResult.gpa).toFixed(2) %>
+                    </p>
+
+                  </div>
+
+
+                  <a
+                    href="/student/download-result/<%= semesterResult.semester %>"
+                    class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition"
+                  >
+                    📥 Download Result
+                  </a>
+
+                </div>
+
+              </div>
+
+
+              <!-- Subjects -->
+
+              <div class="overflow-x-auto">
+
+                <table class="w-full text-sm">
+
+                  <thead>
+
+                    <tr class="text-left text-xs uppercase text-slate-500 border-b border-slate-800">
+
+                      <th class="px-4 py-3">
+                        Subject
+                      </th>
+
+                      <th class="px-4 py-3 text-center">
+                        Marks
+                      </th>
+
+                      <th class="px-4 py-3 text-center">
+                        Percentage
+                      </th>
+
+                      <th class="px-4 py-3 text-center">
+                        Grade
+                      </th>
+
+                    </tr>
+
+                  </thead>
+
+
+                  <tbody>
+
+                    <% semesterResult.subjects.forEach((subject) => { %>
+
+                      <tr class="border-b border-slate-800/60 last:border-0">
+
+                        <td class="px-4 py-3 text-slate-200 font-medium">
+                          <%= subject.subjectName %>
+                        </td>
+
+
+                        <td class="px-4 py-3 text-center text-slate-300">
+
+                          <%= subject.marksObtained %>
+                          /
+                          <%= subject.maxMarks %>
+
+                        </td>
+
+
+                        <td class="px-4 py-3 text-center text-slate-400">
+
+                          <%= subject.percentage.toFixed(1) %>%
+
+                        </td>
+
+
+                        <td class="px-4 py-3 text-center">
+
+                          <span
+                            class="
+                              inline-flex
+                              px-3
+                              py-1
+                              rounded-lg
+                              text-xs
+                              font-bold
+                              <%= subject.grade === 'F'
+                                ? 'bg-red-500/10 text-red-400'
+                                : subject.grade === 'A+' || subject.grade === 'A'
+                                ? 'bg-emerald-500/10 text-emerald-400'
+                                : 'bg-indigo-500/10 text-indigo-400'
+                              %>
+                            "
+                          >
+                            <%= subject.grade %>
+                          </span>
+
+                        </td>
+
+                      </tr>
+
+                    <% }) %>
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            </div>
+
+          <% }) %>
+
+        <% } else { %>
+
+          <div class="text-center py-12">
+
+            <div class="text-4xl mb-3">
+              🎓
+            </div>
+
+            <p class="text-slate-300 font-semibold">
+              No semester results available
+            </p>
+
+            <p class="text-slate-500 text-sm mt-1">
+              Your academic results will appear here once published.
+            </p>
+
+          </div>
+
+        <% } %>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ATTENDANCE HISTORY
+         ===================================================== -->
+
+    <section
+      id="attendance"
+      class="bg-[#0b1525] rounded-2xl border border-slate-800/80 overflow-hidden mb-6"
+    >
+
+      <div class="p-5 md:p-6 border-b border-slate-800">
+
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
+
+          <div>
+
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              📊 Attendance History
+            </h3>
+
+            <p class="text-xs text-slate-500 mt-1">
+              Attendance recorded from your first available class date up to the latest class date.
+            </p>
+
+          </div>
+
+
+          <div
+            class="bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-xl"
+          >
+
+            <span class="text-xs text-slate-500">
+              Overall
+            </span>
+
+            <span class="text-lg font-bold text-emerald-400 ml-2">
+              <%= attendancePercentage %>%
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="p-4">
+
+
+        <!-- Attendance Summary -->
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
+
+          <div
+            class="bg-slate-900/50 border border-slate-800 rounded-xl p-4"
+          >
+
+            <p class="text-xs text-slate-500">
+              Total Classes
+            </p>
+
+            <p class="text-2xl font-bold text-white mt-1">
+              <%= attendanceSummary.total %>
+            </p>
+
+          </div>
+
+
+          <div
+            class="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4"
+          >
+
+            <p class="text-xs text-slate-500">
+              Present
+            </p>
+
+            <p class="text-2xl font-bold text-emerald-400 mt-1">
+              <%= attendanceSummary.present %>
+            </p>
+
+          </div>
+
+
+          <div
+            class="bg-red-500/5 border border-red-500/20 rounded-xl p-4"
+          >
+
+            <p class="text-xs text-slate-500">
+              Absent
+            </p>
+
+            <p class="text-2xl font-bold text-red-400 mt-1">
+              <%= attendanceSummary.absent %>
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- Attendance Table -->
+
+        <div class="overflow-x-auto">
+
+          <table class="w-full text-sm">
+
+            <thead>
+
+              <tr class="text-left text-xs uppercase text-slate-500 border-b border-slate-800">
+
+                <th class="px-4 py-3">
+                  Class Date
+                </th>
+
+                <th class="px-4 py-3">
+                  Subject
+                </th>
+
+                <th class="px-4 py-3 text-center">
+                  Status
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <% if (attendanceHistory && attendanceHistory.length > 0) { %>
+
+                <% attendanceHistory.forEach((record) => { %>
+
+                  <tr class="attendance-row border-b border-slate-800/60 last:border-0">
+
+                    <td class="px-4 py-3 text-slate-300">
+
+                      <%= new Date(record.date).toLocaleDateString(
+                        'en-IN',
+                        {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric'
+                        }
+                      ) %>
+
+                    </td>
+
+
+                    <td class="px-4 py-3 text-slate-200">
+
+                      <%= record.subject || 'General' %>
+
+                    </td>
+
+
+                    <td class="px-4 py-3 text-center">
+
+                      <% if (record.status === 'Present') { %>
+
+                        <span
+                          class="inline-flex px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-bold"
+                        >
+                          PRESENT
+                        </span>
+
+                      <% } else if (record.status === 'Absent') { %>
+
+                        <span
+                          class="inline-flex px-3 py-1 rounded-lg bg-red-500/10 text-red-400 text-xs font-bold"
+                        >
+                          ABSENT
+                        </span>
+
+                      <% } else { %>
+
+                        <span
+                          class="inline-flex px-3 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-bold"
+                        >
+                          LATE
+                        </span>
+
+                      <% } %>
+
+                    </td>
+
+                  </tr>
+
+                <% }) %>
+
+              <% } else { %>
+
+                <tr>
+
+                  <td
+                    colspan="3"
+                    class="text-center py-10 text-slate-500"
+                  >
+                    No attendance records available.
+                  </td>
+
+                </tr>
+
+              <% } %>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         NOTICES
+         ===================================================== -->
+
+    <section
+      id="notices"
+      class="bg-[#0b1525] rounded-2xl border border-slate-800/80 overflow-hidden"
+    >
+
+      <div
+        class="p-5 md:p-6 border-b border-slate-800"
+      >
+
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          🔔 Academic Notices & Upcoming Exam Schedule
+        </h3>
+
+      </div>
+
+
+      <div class="p-3 md:p-4 space-y-2">
+
+        <% if (notices && notices.length > 0) { %>
+
+          <% notices.forEach((n, index) => { %>
+
+            <div
+              class="notice-row p-4 rounded-xl border border-slate-800/70 flex flex-col sm:flex-row justify-between gap-4"
+            >
+
+              <div class="flex gap-4">
+
+                <div
+                  class="w-10 h-10 shrink-0 rounded-xl flex items-center justify-center bg-indigo-500/10 text-indigo-400"
+                >
+                  <%= index % 3 === 0
+                    ? '📅'
+                    : index % 3 === 1
+                    ? '📘'
+                    : '🔔'
+                  %>
+                </div>
+
+
+                <div>
+
+                  <h4 class="font-bold text-white text-sm md:text-base">
+                    <%= n.title %>
+                  </h4>
+
+                  <p class="text-slate-400 text-xs mt-1 leading-5">
+                    <%= n.content %>
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              <div class="sm:text-right text-xs whitespace-nowrap">
+
+                <span class="block font-semibold text-indigo-400">
+                  <%= n.department || 'Administration' %>
+                </span>
+
+                <span class="text-slate-500">
+
+                  <%= n.date ||
+                    new Date(n.createdAt || Date.now()).toLocaleDateString(
+                      'en-IN',
+                      {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                      }
+                    )
+                  %>
+
+                </span>
+
+              </div>
+
+            </div>
+
+          <% }) %>
+
+        <% } else { %>
+
+          <div class="text-center py-12">
+
+            <div class="text-4xl mb-3">
+              🔔
+            </div>
+
+            <p class="text-slate-300 font-semibold">
+              No academic notices available
+            </p>
+
+          </div>
+
+        <% } %>
+
+      </div>
+
+    </section>
+
+
+    <footer class="text-center text-xs text-slate-600 mt-6 pb-2">
+      Student ERP • Academic Session 2026
+    </footer>
+
+  </main>
+
 </div>
+
+</body>
+</html>

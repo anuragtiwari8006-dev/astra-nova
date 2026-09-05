@@ -8,18 +8,27 @@ const Attendance = require('../models/Attendance');
 const Result = require('../models/Result');
 
 // Faculty Dashboard Route
+
 router.get('/dashboard', isAuthenticated, authorizeRoles('faculty'), async (req, res) => {
   try {
     const userId = req.session.user ? req.session.user.id : req.user.id;
     const faculty = await User.findById(userId);
     if (!faculty) return res.status(404).send('Faculty profile not found.');
 
-    // Fetch students in the faculty's assigned department
-    const students = await Student.find({ department: faculty.assignedDepartment || 'Computer Science' }).populate('userId');
+    // Attach fallback values dynamically if they don't exist in the database record
+    const facultyData = {
+      ...faculty.toObject(),
+      assignedDepartment: faculty.assignedDepartment || 'Computer Science & Engineering',
+      assignedSemester: faculty.assignedSemester || 'Semester IV',
+      assignedSubject: faculty.assignedSubject || 'Cloud Computing'
+    };
+
+    // Fetch students in the faculty's department
+    const students = await Student.find({ department: facultyData.assignedDepartment }).populate('userId');
 
     res.render('faculty/dashboard', {
-      user: faculty,
-      faculty: faculty,
+      user: facultyData,
+      faculty: facultyData,
       students,
       message: req.query.message || null
     });
@@ -27,6 +36,7 @@ router.get('/dashboard', isAuthenticated, authorizeRoles('faculty'), async (req,
     res.status(500).send('Faculty Dashboard Error: ' + err.message);
   }
 });
+
 
 // Robust Profile / Availability Update Handler (Supports multiple route names & form field variations)
 const handleProfileUpdate = async (req, res) => {

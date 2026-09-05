@@ -1,33 +1,389 @@
-<div class="max-w-md mx-auto mt-16 bg-white p-8 rounded-xl shadow-md border border-slate-200">
-  <div class="text-center mb-6">
-    <h2 class="text-2xl font-bold text-slate-900">Sign In to Campus ERP</h2>
-    <p class="text-slate-500 text-sm mt-1">Access Admin, Faculty, or Student Portals</p>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #f1f5f9;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+      BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 430px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    padding: 36px;
+    box-shadow:
+      0 20px 45px rgba(15, 23, 42, 0.10),
+      0 4px 12px rgba(15, 23, 42, 0.05);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .login-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 28px 55px rgba(15, 23, 42, 0.13),
+      0 6px 16px rgba(15, 23, 42, 0.06);
+  }
+
+  .login-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .login-icon {
+    width: 62px;
+    height: 62px;
+    margin: 0 auto 18px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    color: #ffffff;
+    font-size: 27px;
+    font-weight: 800;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.25);
+  }
+
+  .login-title {
+    margin: 0;
+    color: #0f172a;
+    font-size: 27px;
+    line-height: 1.25;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .login-subtitle {
+    margin: 8px 0 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .error-box {
+    margin-bottom: 20px;
+    padding: 13px 15px;
+    border-radius: 12px;
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    color: #be123c;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .error-icon {
+    width: 21px;
+    height: 21px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #e11d48;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .form-group {
+    margin-bottom: 19px;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 16px;
+    pointer-events: none;
+  }
+
+  .login-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px 0 42px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+
+  .login-input::placeholder {
+    color: #94a3b8;
+  }
+
+  .login-input:hover {
+    border-color: #94a3b8;
+  }
+
+  .login-input:focus {
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+  }
+
+  .password-input {
+    padding-right: 48px;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 5px;
+    transition: color 0.2s ease;
+  }
+
+  .password-toggle:hover {
+    color: #2563eb;
+  }
+
+  .login-button {
+    width: 100%;
+    height: 49px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 750;
+    cursor: pointer;
+    box-shadow: 0 9px 20px rgba(37, 99, 235, 0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  }
+
+  .login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 13px 25px rgba(37, 99, 235, 0.28);
+    filter: brightness(1.04);
+  }
+
+  .login-button:active {
+    transform: translateY(0);
+  }
+
+  .demo-box {
+    margin-top: 25px;
+    padding: 16px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+
+  .demo-title {
+    margin: 0 0 9px;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .demo-row {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .demo-row:hover {
+    background: #e2e8f0;
+  }
+
+  .demo-code {
+    background: #e2e8f0;
+    color: #334155;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .fill-hint {
+    font-size: 10px;
+    color: #2563eb;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .demo-row:hover .fill-hint {
+    opacity: 1;
+  }
+
+  @media (max-width: 500px) {
+    .login-page {
+      padding: 25px 15px;
+    }
+    .login-card {
+      padding: 28px 22px;
+      border-radius: 20px;
+    }
+    .login-title {
+      font-size: 24px;
+    }
+  }
+</style>
+
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-icon">ERP</div>
+      <h2 class="login-title">Sign In to Campus ERP</h2>
+      <p class="login-subtitle">Access Admin, Faculty, or Student Portals</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="error-box">
+        <span class="error-icon">!</span>
+        <span><%= error %></span>
+      </div>
+    <% } %>
+
+    <form action="/auth/login" method="POST">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-wrapper">
+          <span class="input-icon">✉</span>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            required
+            placeholder="admin@campus.edu"
+            class="login-input"
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-wrapper">
+          <span class="input-icon">●</span>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            required
+            placeholder="Enter your password"
+            class="login-input password-input"
+          >
+          <button
+            type="button"
+            class="password-toggle"
+            onclick="togglePassword()"
+            aria-label="Show or hide password"
+          >
+            👁
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="login-button">
+        Log In
+      </button>
+    </form>
+
+    <!-- DEMO CREDENTIALS BOX (Click any row to auto-fill) -->
+    <div class="demo-box">
+      <p class="demo-title">
+        <span>Demo Credentials</span>
+        <span style="font-size: 10px; color: #64748b; font-weight: normal;">(Click to fill)</span>
+      </p>
+
+      <!-- Admin Row -->
+      <div class="demo-row" onclick="fillCredentials('admin@campus.edu', 'admin123')">
+        <div>
+          <strong>Admin:</strong>
+          <code class="demo-code">admin@campus.edu</code> / <code class="demo-code">admin123</code>
+        </div>
+        <span class="fill-hint">Fill ⚡</span>
+      </div>
+
+      <!-- Faculty Row -->
+      <div class="demo-row" onclick="fillCredentials('faculty@campus.edu', 'faculty123')">
+        <div>
+          <strong>Faculty:</strong>
+          <code class="demo-code">faculty1@campus.edu</code> / <code class="demo-code">faculty123</code>
+        </div>
+        <span class="fill-hint">Fill ⚡</span>
+      </div>
+
+      <!-- Student Row -->
+      
+      <div class="demo-row" onclick="fillCredentials('student1@campus.edu', 'student123')">
+  <div>
+    <strong>Student:</strong>
+    <code class="demo-code">student1@campus.edu</code> / <code class="demo-code">student123</code>
   </div>
-
-  <% if (error) { %>
-    <div class="mb-4 p-3 bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-lg">
-      <%= error %>
+  <span class="fill-hint">Fill ⚡</span>
+</div>
     </div>
-  <% } %>
-
-  <form action="/auth/login" method="POST" class="space-y-4">
-    <div>
-      <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Email Address</label>
-      <input type="email" name="email" required placeholder="admin@campus.edu" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-    </div>
-
-    <div>
-      <label class="block text-xs font-semibold uppercase text-slate-600 mb-1">Password</label>
-      <input type="password" name="password" required placeholder="••••••••" class="w-full p-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-    </div>
-
-    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition">
-      Log In
-    </button>
-  </form>
-
-  <div class="mt-6 border-t pt-4 text-xs text-slate-500 space-y-1">
-    <p><strong>Demo Credentials:</strong></p>
-    <p>Admin: <code class="bg-slate-100 px-1 py-0.5 rounded">admin@campus.edu</code> / <code class="bg-slate-100 px-1 py-0.5 rounded">admin123</code></p>
   </div>
 </div>
+
+<script>
+  function togglePassword() {
+    const password = document.getElementById("password");
+    const button = document.querySelector(".password-toggle");
+
+    if (password.type === "password") {
+      password.type = "text";
+      button.textContent = "🙈";
+    } else {
+      password.type = "password";
+      button.textContent = "👁";
+    }
+  }
+
+  function fillCredentials(email, password) {
+    document.getElementById("email").value = email;
+    document.getElementById("password").value = password;
+  }
+</script>
